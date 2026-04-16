@@ -11,9 +11,31 @@ export async function GET() {
     }
 
     const db = await getDatabase()
-    const settings = await db
+    let settings = await db
       .collection('business_settings')
       .findOne({})
+
+    // Create default settings if none exist
+    if (!settings) {
+      const defaultSettings = {
+        business_name: 'Mi Barbería',
+        address: '',
+        phone: '',
+        email: '',
+        opening_time: '09:00',
+        closing_time: '20:00',
+        work_days: [1, 2, 3, 4, 5],
+        slot_duration_minutes: 45,
+        require_prepayment: false,
+        cancellation_margin_hours: 24,
+        whatsapp_number: '',
+        created_at: new Date(),
+        updated_at: new Date(),
+      }
+      
+      const result = await db.collection('business_settings').insertOne(defaultSettings)
+      settings = { ...defaultSettings, _id: result.insertedId }
+    }
 
     return NextResponse.json({ settings })
   } catch (error) {
@@ -35,10 +57,13 @@ export async function PUT(request: Request) {
       business_name,
       address,
       phone,
+      email,
       opening_time,
       closing_time,
       work_days,
       slot_duration_minutes,
+      require_prepayment,
+      cancellation_margin_hours,
       whatsapp_number 
     } = body
 
@@ -48,10 +73,13 @@ export async function PUT(request: Request) {
       business_name,
       address,
       phone,
+      email,
       opening_time,
       closing_time,
       work_days,
       slot_duration_minutes,
+      require_prepayment,
+      cancellation_margin_hours,
       whatsapp_number,
       updated_at: new Date(),
     }

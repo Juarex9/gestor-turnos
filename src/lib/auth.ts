@@ -1,13 +1,9 @@
-import { NextAuthOptions } from 'next-auth'
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
-import clientPromise from './mongodb'
+import type { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { getDatabase } from './mongodb'
-import { ObjectId } from 'mongodb'
+import { getDatabase } from '@/lib/mongodb'
 import bcrypt from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -20,41 +16,54 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        const db = await getDatabase()
-        const user = await db.collection('users').findOne({ 
-          email: credentials.email 
-        })
+        try {
+          const db = await getDatabase()
+          const user = await db.collection('users').findOne({ 
+            email: credentials.email 
+          })
 
-        if (!user) {
+          if (!user) {
+            return null
+          }
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
+          
+          if (!isPasswordValid) {
+            return null
+          }
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            name: user.name,
+          }
+        } catch (error) {
+          console.error('Auth error:', error)
           return null
-        }
-
-        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
-        
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user._id.toString(),
-          email: user.email,
-          name: user.name,
         }
       }
     })
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60,
   },
   pages: {
     signIn: '/auth/login',
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.sub!
+        session.user.id = token.id as string
       }
       return session
     }
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 }

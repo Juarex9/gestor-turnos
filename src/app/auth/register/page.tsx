@@ -2,12 +2,10 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { Loader2, Scissors, Mail, Lock, User, AlertCircle, ArrowLeft } from 'lucide-react'
+import { Loader2, Scissors, Mail, Lock, User, AlertCircle, ArrowLeft, Check } from 'lucide-react'
 import Link from 'next/link'
 
 export default function RegisterPage() {
-  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -36,7 +34,6 @@ export default function RegisterPage() {
         return
       }
 
-      // Auto-login after registration
       await signIn('credentials', {
         email,
         password,
@@ -53,28 +50,24 @@ export default function RegisterPage() {
   if (success) {
     const roleLabel = role === 'admin' ? 'administrador' : role === 'manager' ? 'gestor' : 'empleado'
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        </div>
-
-        <div className="relative z-10 w-full max-w-md px-6">
-          <div className="bg-neutral-900 rounded-xl p-8 border border-white/10 text-center">
-            <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center mx-auto mb-4">
-              <Mail className="w-8 h-8 text-white" />
+      <div className="min-h-screen flex items-center justify-center bg-background relative">
+        <div className="w-full max-w-md px-6 py-12">
+          <div className="bg-surface-container-lowest rounded-2xl p-8 text-center shadow-card">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-primary" />
             </div>
-            <h2 className="font-headline text-xl font-semibold text-white mb-2">
+            <h2 className="font-headline text-xl font-bold text-on-surface mb-2">
               Cuenta creada
             </h2>
-            <p className="text-white/60 text-sm font-body mb-6">
+            <p className="text-on-surface-variant text-sm font-body mb-6">
               El {roleLabel} puede iniciar sesión con su email <br />
-              <span className="text-white">{email}</span>
+              <span className="text-primary font-medium">{email}</span>
             </p>
             <Link
               href="/auth/login"
-              className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors"
             >
-              <ArrowLeft className="w-4 w-4" />
+              <ArrowLeft className="w-4 h-4" />
               Volver al login
             </Link>
           </div>
@@ -84,54 +77,49 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-      </div>
-
-      <div className="relative z-10 w-full max-w-md px-6">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-white/10 border border-white/20 mb-4">
-            <Scissors className="w-8 h-8 text-white" />
+    <div className="min-h-screen flex items-center justify-center bg-background relative">
+      <div className="w-full max-w-md px-6 py-12">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4">
+            <Scissors className="w-8 h-8 text-on-primary" />
           </div>
-          <h1 className="font-headline text-3xl font-bold text-white tracking-tight">
+          <h1 className="font-headline text-3xl font-black tracking-tight text-on-surface">
             CIRO
           </h1>
-          <p className="text-white/60 text-sm mt-1 font-body">
+          <p className="text-on-surface-variant text-sm mt-1 font-body">
             Premium Grooming
           </p>
         </div>
 
-        <div className="bg-neutral-900 rounded-xl p-8 border border-white/10 shadow-card">
-          <div className="text-center mb-6">
-            <h2 className="font-headline text-xl font-semibold text-white">
+        <div className="bg-surface-container-lowest rounded-2xl p-8 shadow-card">
+          <div className="text-center mb-8">
+            <h2 className="font-headline text-xl font-bold text-on-surface">
               Crear Cuenta
             </h2>
-            <p className="text-white/60 text-sm mt-1 font-body">
+            <p className="text-on-surface-variant text-sm mt-1 font-body">
               Registrate para comenzar a usar el sistema
             </p>
           </div>
           
           <form onSubmit={handleRegister} className="space-y-5">
             {error && (
-              <div className="flex items-center gap-2 bg-red-500/10 text-red-500 p-3 rounded-lg text-sm font-body border border-red-500/20">
+              <div className="flex items-center gap-2 bg-error-container text-error p-3 rounded-xl text-sm font-body">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
             
             <div>
-              <label className="block text-sm font-label text-white/60 mb-2 uppercase tracking-wider">
+              <label className="block text-sm font-label text-on-surface-variant mb-3 uppercase tracking-wider">
                 Nombre Completo
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all font-body"
+                  className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all font-body"
                   placeholder="Juan Pérez"
                   required
                 />
@@ -139,16 +127,16 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-label text-white/60 mb-2 uppercase tracking-wider">
+              <label className="block text-sm font-label text-on-surface-variant mb-3 uppercase tracking-wider">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all font-body"
+                  className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all font-body"
                   placeholder="tu@email.com"
                   required
                 />
@@ -156,16 +144,16 @@ export default function RegisterPage() {
             </div>
             
             <div>
-              <label className="block text-sm font-label text-white/60 mb-2 uppercase tracking-wider">
+              <label className="block text-sm font-label text-on-surface-variant mb-3 uppercase tracking-wider">
                 Contraseña
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-on-surface-variant" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-md text-white placeholder:text-white/30 focus:outline-none focus:border-white focus:ring-1 focus:ring-white transition-all font-body"
+                  className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl text-on-surface placeholder:text-on-surface-variant/50 focus:outline-none focus:ring-2 focus:ring-primary transition-all font-body"
                   placeholder="••••••••"
                   required
                   minLength={6}
@@ -176,7 +164,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black font-label py-3 px-4 rounded-md hover:bg-white/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider text-sm"
+              className="w-full bg-primary text-on-primary font-label py-4 px-4 rounded-xl hover:bg-primary-fixed transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 uppercase tracking-wider text-sm font-body font-bold"
             >
               {loading ? (
                 <Loader2 className="animate-spin h-5 w-5" />
@@ -186,17 +174,17 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/10">
+          <div className="mt-6 pt-6 border-t border-outline-variant/20 -mx-8 px-8 mt-8 -mb-8 rounded-b-2xl">
             <Link
               href="/auth/login"
-              className="block text-center text-white/60 text-sm hover:text-white transition-colors"
+              className="block text-center text-on-surface-variant text-sm hover:text-primary transition-colors font-body"
             >
               ¿Ya tenés cuenta? <span className="underline">Iniciar sesión</span>
             </Link>
           </div>
         </div>
 
-        <p className="text-center text-white/20 text-xs mt-6 font-body">
+        <p className="text-center text-on-surface-variant text-xs mt-8 font-body">
           © 2026 Ciro Premium Grooming
         </p>
       </div>
