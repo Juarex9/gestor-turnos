@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-headline: 'Space Grotesk', sans-serif;
+    --font-body: 'Manrope', sans-serif;
+    --font-label: 'Manrope', sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .font-headline {
+    font-family: var(--font-headline);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .font-label {
+    font-family: var(--font-label);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
